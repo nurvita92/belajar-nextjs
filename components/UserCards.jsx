@@ -1,7 +1,11 @@
 
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Heart, ArrowUpRight } from "lucide-react";
+
+import { Button, buttonVariants } from "@/components/ui/button";
+import { useFavorites } from "@/context/FavoriteContext";
+import { cn } from "@/lib/utils";
 
 import {
   Card,
@@ -10,16 +14,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { useFavorites } from "@/context/FavoriteContext";
-
 export default function UserCard({ user }) {
-  const {
-    addFavorite,
-    removeFavorite,
-    isFavorite,
-  } = useFavorites();
+  const { addFavorite, removeFavorite, isFavorite } =
+    useFavorites();
 
-  const favorite = isFavorite(user.id);
+  const favorited = isFavorite(user.id);
 
   const initials = user.name
     .split(" ")
@@ -28,81 +27,102 @@ export default function UserCard({ user }) {
     .join("")
     .toUpperCase();
 
-  const handleFavorite = () => {
-    if (favorite) {
-      removeFavorite(user.id);
-    } else {
-      addFavorite(user);
-    }
-  };
-
   return (
-    <Card
-      className={`border-2 border-black shadow-md transition-all duration-300 ${
-        favorite
-          ? "bg-[#EEE9FF] text-[#312E81]"
-          : "bg-[#1E40AF] text-white"
-      }`}
-    >
-      <CardHeader>
+    <Card className="group overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl">
+      {/* Header */}
+      <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div
-            className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-              favorite
-                ? "bg-[#D8CCFF] text-[#312E81]"
-                : "bg-white/20 text-white"
-            }`}
-          >
+          {/* Initials */}
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-sm font-bold text-slate-700 ring-1 ring-slate-200">
             {initials}
           </div>
 
-          <CardTitle
-            className={
-              favorite ? "text-[#312E81]" : "text-white"
-            }
-          >
-            {user.name}
-          </CardTitle>
+          {/* Name and status */}
+          <div className="min-w-0 flex-1">
+            <CardTitle className="truncate text-base font-bold text-slate-900">
+              {user.name}
+            </CardTitle>
+
+            {favorited ? (
+              <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-rose-600">
+                <Heart className="size-3 fill-rose-500 text-rose-500" />
+                Favorited
+              </span>
+            ) : (
+              <span className="mt-1 block text-xs text-slate-500">
+                User profile
+              </span>
+            )}
+          </div>
         </div>
       </CardHeader>
 
-      <CardContent>
-        <p
-          className={`text-sm ${
-            favorite ? "text-[#4C438A]" : "text-white"
-          }`}
-        >
-          {user.email}
-        </p>
+      {/* Content */}
+      <CardContent className="pt-0">
+        {/* User information */}
+        <div className="space-y-2">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Email
+            </p>
+            <p className="break-all text-sm text-slate-700">
+              {user.email}
+            </p>
+          </div>
 
-        <p
-          className={`mt-1 text-sm ${
-            favorite ? "text-[#4C438A]" : "text-white"
-          }`}
-        >
-          {user.company.name}
-        </p>
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Company
+            </p>
+            <p className="text-sm text-slate-700">
+              {user.company?.name || "Tidak ada perusahaan"}
+            </p>
+          </div>
+        </div>
 
-        <Button
-          className="mt-4 w-full rounded-full border-0 bg-[#635BFF] text-white hover:bg-[#5148E5]"
-        >
-          View Profile
-        </Button>
+        {/* Buttons */}
+        <div className="mt-5 flex flex-col gap-2">
+          {/* View Profile - top */}
+          <a
+            href={`https://jsonplaceholder.typicode.com/users/${user.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "w-full rounded-md border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+            )}
+          >
+            View Profile
+            <ArrowUpRight className="ml-1 size-4" />
+          </a>
 
-        <Button
-          type="button"
-          variant="outline"
-          className={`mt-2 w-full rounded-full transition-all duration-300 ${
-            favorite
-              ? "border-[#635BFF] bg-[#635BFF] text-white hover:bg-[#5148E5]"
-              : "border-[#FCE7F3] bg-[#FCE7F3] text-[#BE185D] hover:bg-[#FBCFE8]"
-          }`}
-          onClick={handleFavorite}
-        >
-          {favorite
-            ? "♥ Remove from Favourite"
-            : "♡ Add to Favourite"}
-        </Button>
+          {/* Favourite - bottom */}
+          <Button
+            variant="outline"
+            aria-pressed={favorited}
+            onClick={() =>
+              favorited
+                ? removeFavorite(user.id)
+                : addFavorite(user)
+            }
+            className={cn(
+              "w-full rounded-md transition-colors",
+              favorited
+                ? "border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700"
+                : "border-slate-300 bg-slate-900 text-white hover:bg-slate-700 hover:text-white"
+            )}
+          >
+            <Heart
+              className={cn(
+                "mr-1 size-4",
+                favorited && "fill-rose-500 text-rose-500"
+              )}
+            />
+            {favorited
+              ? "Remove Favourite"
+              : "Add Favourite"}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

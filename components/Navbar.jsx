@@ -1,13 +1,9 @@
-
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import { useFavorites } from "@/context/FavoriteContext";
-
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 
 const links = [
   { href: "/", label: "Home" },
@@ -19,29 +15,28 @@ const links = [
 
 export default function Navbar() {
   const { name, submitted } = useUser();
-
-  const displayName =
-    submitted && name?.trim() ? name : "Nurvita";
-
   const { favorites } = useFavorites();
   const pathname = usePathname();
+
+  const displayName =
+    submitted && name?.trim() ? name : "Nurvitasari";
 
   const favoriteCount = favorites.length;
 
   return (
-    <header className="sticky top-4 z-50 mx-auto w-full max-w-7xl px-4">
-      <nav className="flex flex-wrap items-center justify-between gap-3 rounded-full border border-white/40 bg-gradient-to-r from-[#315CB5] to-[#9DB8F2] px-5 py-3 shadow-lg shadow-black/20 backdrop-blur-xl">
+    <header className="sticky top-3 z-50 mx-auto w-full max-w-7xl px-4">
+      <nav className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/20 bg-gradient-to-r from-[#6478B5] via-[#7486C2] to-[#6478B5] px-5 py-4 shadow-lg shadow-[#6478B5]/20">
 
         {/* Logo */}
         <Link
           href="/"
-          className="shrink-0 rounded-full px-3 py-2 text-base font-bold tracking-tight text-[#172554] transition hover:bg-white/30"
+          className="shrink-0 text-lg font-bold tracking-tight text-white transition hover:text-white/75"
         >
-          MyWebsite
+          EduPuan<span className="text-white/50">.</span>
         </Link>
 
         {/* Menu navigasi */}
-        <div className="hidden items-center gap-2 text-sm sm:flex">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           {links.map((link) => {
             const isActive =
               link.href === "/"
@@ -52,11 +47,11 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={cn(
-                  "rounded-full border border-white/70 px-4 py-2 text-[#172554] transition-all duration-200 hover:border-[#635BFF] hover:bg-white/60",
-                  isActive &&
-                    "border-[#635BFF] bg-[#635BFF] font-semibold text-white shadow-md hover:bg-[#5148E5]"
-                )}
+                className={`border-b-2 py-1 text-sm font-medium transition ${
+                  isActive
+                    ? "border-white text-white"
+                    : "border-transparent text-white/75 hover:border-white/40 hover:text-white"
+                }`}
               >
                 {link.label}
               </Link>
@@ -66,21 +61,21 @@ export default function Navbar() {
           {/* Favorites */}
           <Link
             href="/favorites"
-            className={cn(
-              "flex items-center gap-1.5 rounded-full border border-white/70 px-4 py-2 text-[#172554] transition-all duration-200 hover:border-[#635BFF] hover:bg-white/60",
-              pathname?.startsWith("/favorites") &&
-                "border-[#635BFF] bg-[#635BFF] font-semibold text-white shadow-md hover:bg-[#5148E5]"
-            )}
+            className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition ${
+              pathname?.startsWith("/favorites")
+                ? "bg-white text-[#6478B5] shadow-sm"
+                : "bg-white/10 text-white hover:bg-white/20"
+            }`}
           >
             <span>♥</span>
             <span>Favorites</span>
 
             <span
-              className={cn(
-                "ml-1 flex min-w-6 items-center justify-center rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-[#315CB5]",
-                pathname?.startsWith("/favorites") &&
-                  "bg-white text-[#635BFF]"
-              )}
+              className={`flex h-5 min-w-5 items-center justify-center rounded px-1 text-xs font-bold ${
+                pathname?.startsWith("/favorites")
+                  ? "bg-[#E8ECFF] text-[#6478B5]"
+                  : "bg-white text-[#6478B5]"
+              }`}
             >
               {favoriteCount}
             </span>
@@ -88,20 +83,24 @@ export default function Navbar() {
         </div>
 
         {/* Sapaan user */}
-        <span className="rounded-full border border-white/60 bg-white/20 px-4 py-2 text-sm font-medium text-[#172554]">
-          Hi, {displayName} 👋
-        </span>
+        <div className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white text-xs font-bold text-[#6478B5]">
+            {displayName.trim().charAt(0).toUpperCase()}
+          </span>
 
-        {/* Tombol Contact */}
+          <span className="text-sm font-medium text-white/90">
+            Hi, {displayName}
+          </span>
+        </div>
+
+        {/* Tombol Get in touch */}
         <Link
           href="/contact"
-          className={cn(
-            buttonVariants({ size: "sm" }),
-            "shrink-0 rounded-full bg-[#635BFF] px-5 text-white hover:bg-[#5148E5]"
-          )}
+          className="shrink-0 rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-[#6478B5] shadow-sm transition hover:bg-[#F0F2FF]"
         >
           Get in touch
         </Link>
+
       </nav>
     </header>
   );

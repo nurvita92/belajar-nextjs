@@ -77,7 +77,7 @@ export default function Home() {
           <div className="animate-fade-up mx-auto max-w-3xl text-center">
             <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-foreground/5 px-4 py-1.5 text-sm text-muted-foreground">
               <Sparkles className="size-3.5" />
-              Welcome to MyWebsite
+              Welcome to EduPuan
             </div>
 
             <h1 className="text-4xl font-bold tracking-tight text-[#172554] md:text-6xl">

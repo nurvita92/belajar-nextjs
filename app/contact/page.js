@@ -1,12 +1,12 @@
+
 "use client";
-
+import { submitContactForm } from "./actions";
 import { Mail, MapPin, MessageCircle } from "lucide-react";
-
 import { useUser } from "@/context/UserContext";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "hello@mywebsite.com" },
@@ -26,17 +26,22 @@ export default function Contact() {
     setSubmitted,
   } = useUser();
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  async function handleSubmit(event) {
+  event.preventDefault();
 
-    console.log({
-      name,
-      email,
-      message,
-    });
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("email", email);
+  formData.append("message", message);
 
+  const result = await submitContactForm(formData);
+
+  if (result.success) {
     setSubmitted(true);
+  } else {
+    alert(result.error);
   }
+}
 
   return (
     <section className="min-h-screen bg-[#F8FAFF] text-[#172554]">
@@ -44,7 +49,9 @@ export default function Contact() {
 
       <div className="mx-auto max-w-6xl px-6 py-20">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-primary">Contact</p>
+          <p className="text-sm font-semibold text-primary">
+            Contact
+          </p>
 
           <h1 className="mt-2 text-4xl font-bold tracking-tight md:text-5xl">
             Let&apos;s talk
@@ -57,19 +64,20 @@ export default function Contact() {
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-5">
+          {/* CONTACT INFORMATION */}
           <div className="space-y-4 md:col-span-2">
             {contactInfo.map(({ icon: Icon, label, value }) => (
               <Card
                 key={label}
-                className="border border-white/10 bg-foreground/[0.03]"
+                className="border border-gray-200 bg-white text-[#172554] shadow-sm"
               >
                 <CardContent className="flex items-center gap-4">
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
                     <Icon className="size-5" />
                   </div>
 
                   <div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-gray-500">
                       {label}
                     </p>
 
@@ -82,17 +90,32 @@ export default function Contact() {
             ))}
           </div>
 
-          <Card className="border border-white/10 bg-foreground/[0.03] md:col-span-3">
-            <CardContent>
+          {/* FORM */}
+          <Card className="border border-gray-200 bg-white text-[#172554] shadow-sm md:col-span-3">
+            <CardContent className="space-y-6">
+
               {submitted ? (
-                <div className="flex h-full min-h-64 flex-col items-center justify-center text-center">
-                  <p className="text-lg font-semibold">
-                    Message sent
+                <div className="flex min-h-64 flex-col items-center justify-center text-center">
+                  <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-green-100 text-green-600">
+                    <span className="text-3xl">✓</span>
+                  </div>
+
+                  <p className="text-xl font-bold">
+                    Message sent!
                   </p>
 
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <p className="mt-2 text-sm text-gray-500">
                     Thanks for reaching out — we&apos;ll reply soon.
                   </p>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-6 rounded-full"
+                    onClick={() => setSubmitted(false)}
+                  >
+                    Edit message
+                  </Button>
                 </div>
               ) : (
                 <form
@@ -103,7 +126,7 @@ export default function Contact() {
                     <div className="space-y-1.5">
                       <label
                         htmlFor="name"
-                        className="text-sm font-medium"
+                        className="text-sm font-semibold"
                       >
                         Name
                       </label>
@@ -116,13 +139,14 @@ export default function Contact() {
                         onChange={(event) =>
                           setName(event.target.value)
                         }
+                        className="text-gray-900"
                       />
                     </div>
 
                     <div className="space-y-1.5">
                       <label
                         htmlFor="email"
-                        className="text-sm font-medium"
+                        className="text-sm font-semibold"
                       >
                         Email
                       </label>
@@ -136,6 +160,7 @@ export default function Contact() {
                         onChange={(event) =>
                           setEmail(event.target.value)
                         }
+                        className="text-gray-900"
                       />
                     </div>
                   </div>
@@ -143,7 +168,7 @@ export default function Contact() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="message"
-                      className="text-sm font-medium"
+                      className="text-sm font-semibold"
                     >
                       Message
                     </label>
@@ -157,7 +182,7 @@ export default function Contact() {
                       onChange={(event) =>
                         setMessage(event.target.value)
                       }
-                      className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                     />
                   </div>
 
@@ -170,11 +195,42 @@ export default function Contact() {
                 </form>
               )}
 
-              <div className="mt-6 rounded-lg bg-muted p-4">
-                <p>Name: {name}</p>
-                <p>Email: {email}</p>
-                <p>Message: {message}</p>
+              {/* LIVE PREVIEW: ONE BIG BOX */}
+              <div className="rounded-xl border-2 border-[#172554] bg-white p-5 text-[#172554] shadow-sm">
+                <h3 className="mb-4 border-b border-gray-200 pb-3 text-lg font-bold">
+                  Your Information
+                </h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-semibold">
+                      Name:
+                    </p>
+                    <p className="mt-1 min-h-6 break-words text-sm text-gray-600">
+                      {name || "Belum diisi"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold">
+                      Email:
+                    </p>
+                    <p className="mt-1 min-h-6 break-words text-sm text-gray-600">
+                      {email || "Belum diisi"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold">
+                      Message:
+                    </p>
+                    <p className="mt-1 min-h-6 whitespace-pre-wrap break-words text-sm text-gray-600">
+                      {message || "Belum diisi"}
+                    </p>
+                  </div>
+                </div>
               </div>
+
             </CardContent>
           </Card>
         </div>

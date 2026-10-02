@@ -21,7 +21,7 @@ export default function FavoritesPage() {
           </p>
 
           <h1 className="text-3xl font-bold tracking-tight">
-            My Favorites ♥
+            My Favorites User ♥
           </h1>
 
           <p className="mt-2 text-sm text-muted-foreground">
