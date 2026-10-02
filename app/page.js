@@ -1,6 +1,6 @@
+
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -12,7 +12,6 @@ import {
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import UserCard from "@/components/UserCards";
 import {
   Card,
   CardContent,
@@ -42,28 +41,6 @@ const features = [
 ];
 
 export default function Home() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data user");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUsers(data.slice(0, 3));
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
   return (
     <main className="min-h-screen bg-[#F8FAFF] text-[#172554]">
       {/* HERO */}
@@ -82,7 +59,9 @@ export default function Home() {
 
             <h1 className="text-4xl font-bold tracking-tight text-[#172554] md:text-6xl">
               Build something meaningful
-              <span className="text-[#635BFF]"> with technology.</span>
+              <span className="text-[#635BFF]">
+                {" "}with technology.
+              </span>
             </h1>
 
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
@@ -105,7 +84,10 @@ export default function Home() {
               <Link
                 href="/contact"
                 className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
+                  buttonVariants({
+                    variant: "outline",
+                    size: "lg",
+                  }),
                   "rounded-full px-6"
                 )}
               >
@@ -114,48 +96,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* FEATURED USERS */}
-      <section className="mx-auto max-w-6xl bg-[#F8FAFF] px-6 py-16">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight text-[#172554] md:text-3xl">
-              Featured Users
-            </h2>
-
-            <p className="mt-3 text-[#475569]">
-              Meet some of the users in our community.
-            </p>
-          </div>
-
-          <Link
-            href="/users"
-            className={cn(
-              buttonVariants({ variant: "outline", size: "sm" }),
-              "rounded-full"
-            )}
-          >
-            View All Users
-            <ArrowRight className="ml-2 size-4" />
-          </Link>
-        </div>
-
-        {loading ? (
-          <p className="mt-8 text-center text-muted-foreground">
-            Loading users...
-          </p>
-        ) : users.length > 0 ? (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {users.map((user) => (
-              <UserCard key={user.id} user={user} />
-            ))}
-          </div>
-        ) : (
-          <p className="mt-8 text-center text-muted-foreground">
-            Users could not be loaded. Please try again later.
-          </p>
-        )}
       </section>
 
       {/* WHAT WE DO */}
@@ -181,7 +121,9 @@ export default function Home() {
                   <Icon className="size-5" />
                 </div>
 
-                <CardTitle className="text-base">{title}</CardTitle>
+                <CardTitle className="text-base">
+                  {title}
+                </CardTitle>
               </CardHeader>
 
               <CardContent>

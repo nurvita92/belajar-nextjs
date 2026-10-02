@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { Heart, ArrowUpRight } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -29,15 +30,12 @@ export default function UserCard({ user }) {
 
   return (
     <Card className="group overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl">
-      {/* Header */}
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          {/* Initials */}
           <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-sm font-bold text-slate-700 ring-1 ring-slate-200">
             {initials}
           </div>
 
-          {/* Name and status */}
           <div className="min-w-0 flex-1">
             <CardTitle className="truncate text-base font-bold text-slate-900">
               {user.name}
@@ -57,10 +55,8 @@ export default function UserCard({ user }) {
         </div>
       </CardHeader>
 
-      {/* Content */}
       <CardContent className="pt-0">
-        {/* User information */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
               Email
@@ -80,13 +76,10 @@ export default function UserCard({ user }) {
           </div>
         </div>
 
-        {/* Buttons */}
         <div className="mt-5 flex flex-col gap-2">
-          {/* View Profile - top */}
-          <a
-            href={`https://jsonplaceholder.typicode.com/users/${user.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* View Profile */}
+          <Link
+            href={`/users/${user.id}`}
             className={cn(
               buttonVariants({ variant: "outline" }),
               "w-full rounded-md border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900"
@@ -94,9 +87,9 @@ export default function UserCard({ user }) {
           >
             View Profile
             <ArrowUpRight className="ml-1 size-4" />
-          </a>
+          </Link>
 
-          {/* Favourite - bottom */}
+          {/* Favourite */}
           <Button
             variant="outline"
             aria-pressed={favorited}
