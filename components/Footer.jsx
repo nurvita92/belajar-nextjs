@@ -28,7 +28,7 @@ export default function Footer() {
         <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
           <div className="max-w-xs">
             <p className="text-lg font-bold text-white">
-              MyWebsite
+              EduPuan — Build something meaningful
             </p>
             <p className="mt-2 text-sm text-white/80">
               We help individuals and businesses build modern, simple, and
