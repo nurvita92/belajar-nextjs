@@ -23,11 +23,11 @@ export default function Profile() {
         <Card className="border border-white/10 bg-foreground/[0.03]">
           <CardContent className="flex flex-col items-center text-center">
             <div className="flex size-20 items-center justify-center rounded-full bg-gradient-to-br from-primary/40 to-primary/10 text-2xl font-bold">
-              MW
+              EP
             </div>
 
             <h1 className="mt-4 text-2xl font-bold tracking-tight">
-              MyWebsite Team
+              EduPuan Team
             </h1>
             <p className="text-sm text-muted-foreground">
               Web &amp; Product Development

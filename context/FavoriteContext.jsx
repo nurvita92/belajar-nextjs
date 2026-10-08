@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 const FavoriteContext = createContext(undefined);
@@ -9,15 +9,6 @@ export function FavoriteProvider({ children }) {
   const { isLoggedIn } = useAuth();
   const [favorites, setFavorites] = useState([]);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      return;
-    }
-
-    fetch("/api/favorites")
-      .then((res) => (res.ok ? res.json() : []))
-      .then(setFavorites);
-  }, [isLoggedIn]);
 
   async function addFavorite(user) {
     if (!isLoggedIn) {

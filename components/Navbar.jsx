@@ -22,14 +22,8 @@ export default function Navbar() {
   const { user, isLoggedIn } = useAuth();
   const { favorites } = useFavorite();
 
-  // Ambil nama dari email user
-  const userName = user?.email
-    ? user.email.split("@")[0]
-    : "User";
-
-  // Bikin nama jadi lebih rapi
-  const displayName =
-    userName.charAt(0).toUpperCase() + userName.slice(1);
+  
+  const displayName = user?.name || "User";
 
   return (
     <header className="sticky top-4 z-50 mx-auto w-full max-w-4xl px-4">
@@ -74,9 +68,12 @@ export default function Navbar() {
         {/* Login / User */}
         {isLoggedIn ? (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-slate-700">
-              Hi, {displayName} 👋
-            </span>
+            <Link
+  href="/account"
+  className="text-sm font-medium text-slate-700 transition-colors hover:text-[#6C63FF]"
+>
+  Hi, {displayName} 👋
+</Link>
 
             <form action="/auth/signout" method="post">
               <button

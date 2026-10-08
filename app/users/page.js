@@ -19,8 +19,8 @@ export default function UsersPage() {
         setError("");
 
         const response = await fetch(
-          "https://jsonplaceholder.typicode.com/users"
-        );
+  "https://jsonplaceholder.typicode.com/users"
+);
 
         if (!response.ok) {
           throw new Error("Gagal mengambil data users");
