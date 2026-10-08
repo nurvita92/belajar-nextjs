@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Heart, ArrowUpRight } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useFavorites } from "@/context/FavoriteContext";
+import { useFavorite } from "@/context/FavoriteContext";
 import { cn } from "@/lib/utils";
 
 import {
@@ -17,7 +17,7 @@ import {
 
 export default function UserCard({ user }) {
   const { addFavorite, removeFavorite, isFavorite } =
-    useFavorites();
+    useFavorite();
 
   const favorited = isFavorite(user.id);
 
