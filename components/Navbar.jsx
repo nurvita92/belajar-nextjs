@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser } from "@/context/UserContext";
-import { useFavorites } from "@/context/FavoriteContext";
+
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { useFavorite } from "@/context/FavoriteContext";
 
 const links = [
   { href: "/", label: "Home" },
@@ -11,96 +14,96 @@ const links = [
   { href: "/services", label: "Services" },
   { href: "/profile", label: "Profile" },
   { href: "/contact", label: "Contact" },
+  { href: "/favorites", label: "Favorites" },
 ];
 
 export default function Navbar() {
-  const { name, submitted } = useUser();
-  const { favorites } = useFavorites();
   const pathname = usePathname();
+  const { user, isLoggedIn } = useAuth();
+  const { favorites } = useFavorite();
 
+  // Ambil nama dari email user
+  const userName = user?.email
+    ? user.email.split("@")[0]
+    : "User";
+
+  // Bikin nama jadi lebih rapi
   const displayName =
-    submitted && name?.trim() ? name : "Nurvitasari";
-
-  const favoriteCount = favorites.length;
+    userName.charAt(0).toUpperCase() + userName.slice(1);
 
   return (
-    <header className="sticky top-3 z-50 mx-auto w-full max-w-7xl px-4">
-      <nav className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/20 bg-gradient-to-r from-[#6478B5] via-[#7486C2] to-[#6478B5] px-5 py-4 shadow-lg shadow-[#6478B5]/20">
+    <header className="sticky top-4 z-50 mx-auto w-full max-w-4xl px-4">
+      <nav className="flex items-center justify-between gap-4 rounded-full border border-slate-200 bg-white/90 px-4 py-2 shadow-lg backdrop-blur-xl">
 
         {/* Logo */}
         <Link
           href="/"
-          className="shrink-0 text-lg font-bold tracking-tight text-white transition hover:text-white/75"
+          className="shrink-0 text-sm font-bold tracking-tight text-slate-900"
         >
-          EduPuan<span className="text-white/50">.</span>
+          EduPuan
         </Link>
 
-        {/* Menu navigasi */}
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {/* Menu */}
+        <div className="hidden items-center gap-1 text-sm text-slate-600 sm:flex">
           {links.map((link) => {
             const isActive =
               link.href === "/"
                 ? pathname === "/"
                 : pathname?.startsWith(link.href);
 
+            const label =
+              link.href === "/favorites"
+                ? `Favorites (${favorites.length})`
+                : link.label;
+
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`border-b-2 py-1 text-sm font-medium transition ${
-                  isActive
-                    ? "border-white text-white"
-                    : "border-transparent text-white/75 hover:border-white/40 hover:text-white"
-                }`}
+                className={cn(
+                  "rounded-full px-3 py-1.5 transition-colors hover:bg-slate-100 hover:text-slate-900",
+                  isActive && "bg-slate-100 text-slate-900"
+                )}
               >
-                {link.label}
+                {label}
               </Link>
             );
           })}
+        </div>
 
-          {/* Favorites */}
-          <Link
-            href="/favorites"
-            className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition ${
-              pathname?.startsWith("/favorites")
-                ? "bg-white text-[#6478B5] shadow-sm"
-                : "bg-white/10 text-white hover:bg-white/20"
-            }`}
-          >
-            <span>♥</span>
-            <span>Favorites</span>
-
-            <span
-              className={`flex h-5 min-w-5 items-center justify-center rounded px-1 text-xs font-bold ${
-                pathname?.startsWith("/favorites")
-                  ? "bg-[#E8ECFF] text-[#6478B5]"
-                  : "bg-white text-[#6478B5]"
-              }`}
-            >
-              {favoriteCount}
+        {/* Login / User */}
+        {isLoggedIn ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-slate-700">
+              Hi, {displayName} 👋
             </span>
+
+            <form action="/auth/signout" method="post">
+              <button
+                type="submit"
+                className={cn(
+                  buttonVariants({
+                    size: "sm",
+                    variant: "outline",
+                  }),
+                  "rounded-full"
+                )}
+              >
+                Logout
+              </button>
+            </form>
+          </div>
+        ) : (
+          <Link
+            href="/login"
+            className={cn(
+              buttonVariants({ size: "sm" }),
+              "rounded-full"
+            )}
+          >
+            Login
           </Link>
-        </div>
-
-        {/* Sapaan user */}
-        <div className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white text-xs font-bold text-[#6478B5]">
-            {displayName.trim().charAt(0).toUpperCase()}
-          </span>
-
-          <span className="text-sm font-medium text-white/90">
-            Hi, {displayName}
-          </span>
-        </div>
-
-        {/* Tombol Get in touch */}
-        <Link
-          href="/contact"
-          className="shrink-0 rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-[#6478B5] shadow-sm transition hover:bg-[#F0F2FF]"
-        >
-          Get in touch
-        </Link>
-
+        )}
       </nav>
     </header>
   );

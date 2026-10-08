@@ -1,23 +1,18 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 export async function deleteMessageAction(formData) {
-  const id = formData.get("id");
+  const supabase = await createClient();
+  const id = Number(formData.get("id"));
 
-  if (!id) {
-    return;
-  }
-
-  const { error } = await supabase
-    .from("messages")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("messages").delete().eq("id", id);
 
   if (error) {
-    throw new Error(error.message);
+    return { success: false, error: error.message };
   }
 
   revalidatePath("/messages");
+  return { success: true };
 }

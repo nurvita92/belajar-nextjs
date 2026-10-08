@@ -1,22 +1,20 @@
-
 "use client";
 
 import Link from "next/link";
 
-import { useFavorites } from "@/context/FavoriteContext";
+import { useFavorite } from "@/context/FavoriteContext";
 import UserCard from "@/components/UserCards";
 
-
 export default function FavoritesPage() {
-  const { favorites } = useFavorites();
+  const { favorites } = useFavorite();
 
   return (
-    <main className="min-h-screen bg-[#F8FAFF] text-[#172554]">
+    <main className="min-h-screen bg-[#F8F7FF] text-[#192B62]">
       <section className="mx-auto w-full max-w-6xl px-6 py-12">
 
-        {/* Header halaman */}
+        {/* Header */}
         <div className="mb-8">
-          <p className="mb-2 text-sm font-medium text-primary">
+          <p className="mb-2 text-sm font-semibold text-[#6C63FF]">
             YOUR COLLECTION
           </p>
 
@@ -24,69 +22,69 @@ export default function FavoritesPage() {
             My Favorites User ♥
           </h1>
 
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 text-sm text-[#6676A3]">
             All the users you have saved in one place.
           </p>
         </div>
 
-        {/* Jika belum ada Favourite */}
+        {/* Belum ada favorite */}
         {favorites.length === 0 ? (
-          <div className="flex min-h-[350px] flex-col items-center justify-center rounded-2xl border border-dashed border-foreground/20 bg-foreground/[0.02] px-6 text-center">
+          <div className="flex min-h-[350px] flex-col items-center justify-center rounded-3xl border border-dashed border-[#C9C6FF] bg-white/50 px-6 text-center shadow-sm">
 
-            <div className="mb-5 flex size-16 items-center justify-center rounded-full bg-primary/10 text-3xl text-primary">
+            <div className="mb-5 flex size-16 items-center justify-center rounded-full bg-[#EAE8FF] text-3xl text-[#6C63FF]">
               ♡
             </div>
 
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-xl font-semibold text-[#192B62]">
               No favorites yet
             </h2>
 
-            <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-              You haven&apos;t added any users to your
-              favorites yet. Explore users and save
-              the ones you like.
+            <p className="mt-2 max-w-sm text-sm text-[#6676A3]">
+              You haven&apos;t added any users to your favorites yet.
+              Explore users and save the ones you like.
             </p>
 
             <Link
-           href="/users"
-           className="mt-6 inline-flex h-10 items-center justify-center rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
->
-             Explore Users
-           </Link>
-
+              href="/users"
+              className="mt-6 inline-flex h-10 items-center justify-center rounded-full bg-[#6C63FF] px-6 text-sm font-medium text-white transition-colors hover:bg-[#5B52E8]"
+            >
+              Explore Users
+            </Link>
           </div>
         ) : (
-
-          /* Jika sudah ada Favourite */
+          /* Sudah ada favorite */
           <>
             <div className="mb-6 flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#6676A3]">
                 {favorites.length}{" "}
-                {favorites.length === 1
-                  ? "user"
-                  : "users"}{" "}
-                saved
+                {favorites.length === 1 ? "user" : "users"} saved
               </p>
 
               <Link
                 href="/users"
-                className="text-sm font-medium text-primary hover:underline"
+                className="text-sm font-medium text-[#6C63FF] hover:underline"
               >
                 Explore more →
               </Link>
             </div>
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {favorites.map((user) => (
+              {favorites.map((favorite) => (
                 <UserCard
-                  key={user.id}
-                  user={user}
+                  key={favorite.id}
+                  user={{
+                    id: favorite.app_users.id,
+                    name: favorite.app_users.name,
+                    email: favorite.app_users.email,
+                    company: {
+                      name: favorite.app_users.company_name,
+                    },
+                  }}
                 />
               ))}
             </div>
           </>
         )}
-
       </section>
     </main>
   );
