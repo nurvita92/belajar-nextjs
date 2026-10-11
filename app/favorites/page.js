@@ -7,11 +7,11 @@ import UserCard from "@/components/UserCards";
 
 export default function FavoritesPage() {
   const { favorites } = useFavorite();
+  const favoriteCount = favorites.length;
 
   return (
     <main className="min-h-screen bg-[#F8F7FF] text-[#192B62]">
       <section className="mx-auto w-full max-w-6xl px-6 py-12">
-
         {/* Header */}
         <div className="mb-8">
           <p className="mb-2 text-sm font-semibold text-[#6C63FF]">
@@ -28,9 +28,8 @@ export default function FavoritesPage() {
         </div>
 
         {/* Belum ada favorite */}
-        {favorites.length === 0 ? (
+        {favoriteCount === 0 ? (
           <div className="flex min-h-[350px] flex-col items-center justify-center rounded-3xl border border-dashed border-[#C9C6FF] bg-white/50 px-6 text-center shadow-sm">
-
             <div className="mb-5 flex size-16 items-center justify-center rounded-full bg-[#EAE8FF] text-3xl text-[#6C63FF]">
               ♡
             </div>
@@ -56,8 +55,8 @@ export default function FavoritesPage() {
           <>
             <div className="mb-6 flex items-center justify-between">
               <p className="text-sm text-[#6676A3]">
-                {favorites.length}{" "}
-                {favorites.length === 1 ? "user" : "users"} saved
+                {favoriteCount} {favoriteCount === 1 ? "user" : "users"} added
+                this session
               </p>
 
               <Link
@@ -69,19 +68,21 @@ export default function FavoritesPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {favorites.map((favorite) => (
-                <UserCard
-                  key={favorite.id}
-                  user={{
-                    id: favorite.app_users.id,
-                    name: favorite.app_users.name,
-                    email: favorite.app_users.email,
-                    company: {
-                      name: favorite.app_users.company_name,
-                    },
-                  }}
-                />
-              ))}
+              {favorites.map((favorite) => {
+                const u = favorite.user ?? favorite.app_users;
+
+                return (
+                  <UserCard
+                    key={favorite.user_id ?? u.id}
+                    user={{
+                      id: u.id,
+                      name: u.name,
+                      email: u.email,
+                      company: u.company ?? { name: u.company_name },
+                    }}
+                  />
+                );
+              })}
             </div>
           </>
         )}

@@ -1,4 +1,3 @@
-import { createClient } from "@/lib/supabase/server";
 import {
   getAllFavorites,
   addFavorite,
@@ -20,19 +19,9 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const supabase = await createClient();
-const {
-  data: { user },
-} = await supabase.auth.getUser();
-
-console.log("AUTH USER DI FAVORITES:", user);
     const body = await request.json();
 
-    console.log("FAVORITE BODY:", body);
-
     const result = await addFavorite(body);
-
-    console.log("FAVORITE RESULT:", result);
 
     if (!result.success) {
       return Response.json(

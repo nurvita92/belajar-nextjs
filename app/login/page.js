@@ -16,7 +16,7 @@ export default function LoginPage() {
           </p>
 
           <h1 className="mt-2 text-4xl font-bold tracking-tight text-[#192B62] md:text-5xl">
-            Welcome back
+            Welcome Back
           </h1>
 
           <p className="mt-4 text-[#6676A3]">
